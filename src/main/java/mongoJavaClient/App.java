@@ -1,3 +1,4 @@
+package mongoJavaClient;
 import java.util.Scanner;
 
 public class App {
@@ -23,15 +24,19 @@ public class App {
     		twitter.register(username, password);
     		login = true;
     	}
+    	if (!login) {
+    		System.out.println ("Username or password doesn't match.");
+    	}
     	while (login) {    		
     		String command = in.nextLine();
     		if (!command.isEmpty()) {
 				String[] split = command.split("\\s+");
 				switch (split[0]){
 					case "follow" :
-						if (!twitter.isUserFollows(username, split[1]))
+						if (!twitter.isUserFollows(username, split[1])) {
 							twitter.follow(username, split[1]);
-						else
+							System.out.println("You are now following " + split[1]);
+						} else
 							System.out.println("You already follow " + split[1]);
 						break;
 					case "timeline" :
@@ -48,7 +53,8 @@ public class App {
 						break;
 				}
     		}
-    	}    	
+    	}
+    	System.out.println("Terminating...");
     	twitter.close();
 	}
 

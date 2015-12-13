@@ -22,7 +22,7 @@
 	          <manifest>
 	            <addClasspath>true</addClasspath>
 	            <classpathPrefix>lib/</classpathPrefix>
-	            <mainClass>cassandra_java_client.client.App</mainClass>
+	            <mainClass>mongoJavaClient.App</mainClass>
 	          </manifest>
 	        </archive>
 	      </configuration>
@@ -32,7 +32,7 @@
 	  	  <artifactId>exec-maven-plugin</artifactId>
 	  	  <version>1.2.1</version>
 	  	  <configuration>
-	            <mainClass>cassandra_java_client.client.App</mainClass>
+	            <mainClass>mongoJavaClient.App</mainClass>
 	  	  </configuration>
 	    </plugin>  
 	    <plugin>

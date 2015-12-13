@@ -1,3 +1,4 @@
+package mongoJavaClient;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -87,11 +88,12 @@ public class Querying {
 			
 			BasicDBObject tweet2 = new BasicDBObject("tweet_id", tweet_id);
 			insertTweet(new BasicDBObject("userline", tweet2), username);
+			insertTweet(new BasicDBObject("timeline", tweet2), username);
 			
 			DBCursor cursor = users.find(new BasicDBObject("username", username));
 			if (cursor.hasNext()) {
 				BasicDBList followers = (BasicDBList) cursor.next().get("followers");
-				if (!followers.isEmpty()) {
+				if (followers != null) {
 					for (Object follower: followers) {
 						insertTweet(new BasicDBObject("timeline", tweet2),
 								(String) ((DBObject) follower).get("follower"));
@@ -107,8 +109,37 @@ public class Querying {
 				"$push", new BasicDBObject(tweet)));
 	}
 	
-	public void showTweets (String username, String type) {}
+	public void showTweets (String username, String type) {
+		if (isUserExist(username)) {
+			BasicDBObject user = new BasicDBObject("username", username);
+			DBCursor cursor = users.find(user);
+			if(cursor.hasNext()) {
+				BasicDBList lines = (BasicDBList) cursor.next().get(type);
+				if (lines != null) {
+					for (Object line: lines) {
+						printTweet ((BasicDBObject) line);
+					}
+				} else {
+					System.out.println(type + " is empty.");
+				}
+			}
+		} else {
+			System.out.println("Username " + username + "doesn't exist.");
+		}
+	}
 	
+	public void printTweet (BasicDBObject idTweet) {
+		DBCursor cursor = tweets.find(idTweet);
+		if(cursor.hasNext()) {
+			DBObject tmp = cursor.next();
+			String username = (String) tmp.get("username");
+			String body = (String) tmp.get("body");
+			System.out.format("[%s] %s\n", 
+        			username,
+        			body);
+		}
+	}
+		
 	public boolean isUserExist (String username) {
 		BasicDBObject whereQuery = new BasicDBObject("username", username);
 		DBCursor cursor = users.find(whereQuery);
